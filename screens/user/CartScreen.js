@@ -98,7 +98,7 @@ const CartScreen = ({ navigation }) => {
             <CartProductList
               key={index}
               index={index}
-              image={`${network.serverip}/uploads/${item.image}`}
+              image={item.image}
               title={item.title}
               price={item.price}
               quantity={item.quantity}

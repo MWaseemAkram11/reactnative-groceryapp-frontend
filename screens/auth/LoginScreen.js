@@ -146,14 +146,14 @@ const LoginScreen = ({ navigation }) => {
               placeholderTextColor={colors.muted}
               radius={5}
             />
-            <View style={styles.forgetPasswordContainer}>
+            {/* <View style={styles.forgetPasswordContainer}>
               <Text
                 onPress={() => navigation.navigate("forgetpassword")}
                 style={styles.ForgetText}
               >
                 Forget Password?
               </Text>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
         <View style={styles.buttomContainer}>

@@ -24,6 +24,7 @@ import CustomInput from "../../components/CustomInput";
 
 const CategoriesScreen = ({ navigation, route }) => {
   const { categoryID } = route.params;
+  let imgb = 'https://res.cloudinary.com/dudvx0nrn/image/upload/v1684787612/gt31qkmcsbskcxdqlbt6.png'
 
   const [isLoading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);

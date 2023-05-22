@@ -40,7 +40,7 @@ const EditProductScreen = ({ navigation, route }) => {
     title: title,
     sku: sku,
     price: price,
-    image: image,
+    image: image.url,
     description: description,
     category: category,
     quantity: quantity,
@@ -57,16 +57,36 @@ const EditProductScreen = ({ navigation, route }) => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
     });
     console.log(result);
     if (!result.cancelled) {
-      setImage(result.uri);
+      let newFile = { uri: result.uri,type:`test/${result.uri.slice(70).split(".")[1]}`,name:`test.${result.uri.slice(70).split(".")[1]}`}
+      setImage(newFile);
+      // upload();
+      handleUpload(newFile)
     }
   };
+
+  const handleUpload = (imgFile)=> {
+    const dataForm = new FormData();
+    console.log(`image file---`, imgFile)
+    dataForm.append('file',imgFile);
+    dataForm.append('upload_preset', 'grocery-store');
+    dataForm.append('cloud_name', 'dudvx0nrn');
+    console.log(`dataform---`,dataForm)
+    fetch("https://api.cloudinary.com/v1_1/dudvx0nrn/image/upload",{
+      method:"post",
+      body:dataForm
+    }).then(res=>res.json())
+      .then(data=>
+      // console.log(data.url)
+      setImage(data)
+    )
+  }
 
   //Method for imput validation and post data to server to edit product using API call
   const editProductHandle = () => {
@@ -110,7 +130,7 @@ const EditProductScreen = ({ navigation, route }) => {
 
   // set all the input fields and image on initial render
   useEffect(() => {
-    setImage(`${network.serverip}/uploads/${product?.image}`);
+    setImage(product?.image);
     setTitle(product.title);
     setSku(product.sku);
     setQuantity(product.quantity.toString());

@@ -208,7 +208,7 @@ const ViewCategoryScreen = ({ navigation, route }) => {
         ) : (
           foundItems.map((item, index) => (
             <CategoryList
-              icon={`${network.serverip}/uploads/${item?.icon}`}
+              icon={`https://res.cloudinary.com/dudvx0nrn/image/upload/v1684787612/gt31qkmcsbskcxdqlbt6.png`}
               key={index}
               title={item?.title}
               description={item?.description}

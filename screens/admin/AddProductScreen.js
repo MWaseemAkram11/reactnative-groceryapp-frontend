@@ -96,34 +96,28 @@ const AddProductScreen = ({ navigation, route }) => {
   myHeaders.append("x-auth-token", authUser.token);
   myHeaders.append("Content-Type", "application/json");
 
-  const upload = async () => {
-    console.log("upload-F:", image);
-
-    var formdata = new FormData();
-    formdata.append("photos", image, "product.png");
-
-    var ImageRequestOptions = {
-      method: "POST",
-      body: formdata,
-      redirect: "follow",
-    };
-
-    fetch(
-      "https://api-easybuy.herokuapp.com/photos/upload",
-      ImageRequestOptions
+  const handleUpload = (imgFile)=> {
+    const dataForm = new FormData();
+    console.log(`image file---`, imgFile)
+    dataForm.append('file',imgFile);
+    dataForm.append('upload_preset', 'grocery-store');
+    dataForm.append('cloud_name', 'dudvx0nrn');
+    console.log(`dataform---`,dataForm)
+    fetch("https://api.cloudinary.com/v1_1/dudvx0nrn/image/upload",{
+      method:"post",
+      body:dataForm
+    }).then(res=>res.json())
+      .then(data=>
+      // console.log(data.url)
+      setImage(data)
     )
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => console.log("error", error));
-  };
+  }
 
   var raw = JSON.stringify({
     title: title,
     sku: sku,
     price: price,
-    image: image,
+    image: image.url,
     description: description,
     category: category,
     quantity: quantity,
@@ -140,16 +134,19 @@ const AddProductScreen = ({ navigation, route }) => {
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
     });
 
     if (!result.cancelled) {
-      console.log(result);
-      setImage(result.uri);
-      upload();
+      console.log(result.uri.length);
+      let newFile = { uri: result.uri,type:`test/${result.uri.slice(70).split(".")[1]}`,name:`test.${result.uri.slice(70).split(".")[1]}`}
+      console.log(`newfile--`, newFile)
+      setImage(newFile);
+      // upload();
+      handleUpload(newFile)
     }
   };
 
@@ -233,7 +230,7 @@ const AddProductScreen = ({ navigation, route }) => {
             {image ? (
               <TouchableOpacity style={styles.imageHolder} onPress={pickImage}>
                 <Image
-                  source={{ uri: image }}
+                  source={{uri:image.url}}
                   style={{ width: 200, height: 200 }}
                 />
               </TouchableOpacity>
